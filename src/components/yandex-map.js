@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
-import { CENTER_COORDS } from "./../constants";
 import { YMaps, Map, GeoObject } from 'react-yandex-maps';
 
 export default class YandexMap extends Component {
-  render() {
-    const { handleClick, mapState } = this.props
+  constructor(props){
+    super(props);
+    this.state = {
+      draggableIndex: null,
+    }
+  }
+
+    render() {
+    const { handleClick, mapState, setOfPoints } = this.props
 
     return (
-      <section className="App-map">
         <YMaps query={{
           apikey: '1576e534-4f10-4132-87f9-1288b93ed78b',
         }}>
@@ -16,21 +21,49 @@ export default class YandexMap extends Component {
             height="100%"
             defaultState={mapState} >
 
-              <GeoObject
-                properties = {{
-                                hintContent: "bzzz",
-                                balloonContentHeader: "-__-",
-                                balloonContentBody: "omnomnom",
-                                population: 11848762
-                            }}
-                  onClick = {this.props.onIconClicked}
-                  onDragstart = {{/* opacity old path ? */}}
-                  geometry={{type: "Point", coordinates: CENTER_COORDS}}
-                  options={{draggable: true}}
-              />
+              {setOfPoints.map((point, index) => {
+                const { draggableIndex } = this.state;
+
+
+                let polyline = null;
+                if (index < setOfPoints.length - 1 && index !== draggableIndex && index !== draggableIndex - 1) {
+                  // point.id !== draggableId
+                  polyline = <GeoObject
+                    key={[point.id, "-path"].join("")}
+                    geometry={{
+                      type: "LineString",
+                      coordinates: [point.coords, setOfPoints[index + 1].coords ],
+                      strokeWidth: 2
+                    }} />
+                }
+
+                return (<React.Fragment key={index}>
+                  <GeoObject key={point.id}
+                    properties = {{ balloonContent: point.title }}
+                      onClick = {this.props.onIconClicked}
+                    onDragstart = {() => {this._onDragstart(index)}}
+                    onDragend = {(e) => {this._onDragend(e, index)}}
+                    geometry={{type: "Point", coordinates: point.coords}}
+                    options={{draggable: true}}
+                  />
+                  {polyline}
+              </React.Fragment>
+              )})}
+
+
 
           </Map>
+
         </YMaps>
-      </section>
     )}
+
+    _onDragstart(index) {
+       this.setState({draggableIndex: index})
+
+    }
+    _onDragend(event, index){
+      this.props.setCoordsAfterDrag(index, event.get('target').geometry._coordinates);
+
+      this.setState({draggableIndex: null})
+    }
 }

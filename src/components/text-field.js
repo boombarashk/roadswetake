@@ -5,7 +5,7 @@ class TextField extends Component {
         return(
             <input name="pointname" className="App-input" type="text" 
                    placeholder="Новая точка маршрута"
-                   value="" />
+                   defaultValue="" />
         )
     }
 }
