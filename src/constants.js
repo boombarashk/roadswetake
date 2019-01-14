@@ -1,0 +1,1 @@
+export const CENTER_COORDS = [59.9874597, 30.3036836];

@@ -1,64 +1,52 @@
 import React, { Component } from 'react'
-import GoogleMap from './components/google-map'
+import { CENTER_COORDS } from "./constants";
+import YandexMap from './components/yandex-map'
 import TextField from './components/text-field'
 import './App.css';
+import Balloon from "./components/balloon";
 
 
-const AVRORA_POINT = {lat: 59.95427625347425, lng: 30.333519058227466}
-const CHIZSHIK_POINT = {lat: 59.94224116699061, lng: 30.3381539154052 }
+const handleClick = (event) => {
+  console.log(event, event.get('coords'))
+  console.log(event.originalEvent.map.balloon.open())
+};
 
-class App extends Component {
+
+export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { api: {
-      map: null,
-      maps: null,
-      defineRoute: () => {},
-      renderRoute: () => {},
-    } };
+    this.state = {
+      mapState: {
+        center: CENTER_COORDS,
+        zoom: 12,
+      },
+      clickCoords: {
+        x: 0,
+        y: 0
+      },
+      setOfCoords: [CENTER_COORDS]
+    }
+    this._onIconClicked = this._onIconClicked.bind(this)
   }
 
   render() {
-      //const mapState = { center: [55.76, 37.64], zoom: 4 };
+
     return (
       <div className="App">
-        <section id="pointsList">
+        <section className="App-handles">
           <TextField/>
         </section>
-        
-        <GoogleMap api={{ onGoogleApiLoaded: this._onGoogleApiLoaded, ...this.state.api }} />
+
+        <YandexMap handleClick={handleClick} onIconClicked={this._onIconClicked} {...this.state}/>
+        <Balloon coords={ this.state.clickCoords }/>
       </div>
     );
   }
 
-
-  _onGoogleApiLoaded = ({map, maps}) => {
-    this.setState({ api: {
-      map,
-      maps,
-      defineRoute: (new maps.DirectionsService).route,
-      renderRoute: new maps.DirectionsRenderer,
-    } });
-    
-    this.onRenderRoute();
-  }
-  
-  onRenderRoute() {
-    this.state.api.defineRoute({
-      origin: AVRORA_POINT,
-      destination: CHIZSHIK_POINT,
-      travelMode: this.state.api.maps.TravelMode.WALKING
-    }, (response, status) => {
-      if (status === "OK") {
-            console.log(response.routes[0].legs[0].steps);
-        /*  OUT OF QUOTA
-        this.state.api.renderRoute.setDirections(response)
-        this.state.api.renderRoute.setMap(this.state.api.map)*/
-      } else {
-        console.log(status)
-      }
-    })
+  _onIconClicked(e) {
+    const { clientX, clientY} = e.originalEvent.domEvent.originalEvent;
+    this.setState({clickCoords: {x: clientX, y: clientY}});
+      console.log(e.originalEvent.target);
+      console.log(clientX, clientY)
   }
 }
-
-export default App;
