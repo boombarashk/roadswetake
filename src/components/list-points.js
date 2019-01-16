@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Throttle } from 'react-throttle';
+import throttle from 'lodash.throttle';
 import { THROTTLE_TIME } from "../constants";
 
 export default class ListPoints extends Component {
@@ -8,28 +8,37 @@ export default class ListPoints extends Component {
 
     this._onDragend = this._onDragend.bind(this);
     this._onDragover = this._onDragover.bind(this);
+    this._onDragoverThrottle = throttle(this._onDragoverThrottle, THROTTLE_TIME);
   }
-/*
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-  }*/
 
   render(){
     const { setOfPoints, deletePoint } = this.props;
 
     const listPoints = setOfPoints.map((point, index)=>{
-      {/*<Throttle key={["wrap-hoc-", index].join("")}  time={ THROTTLE_TIME } handler="onDragOver">*/}
-        return <li key={["item-", index].join("")} draggable="true"  onDragOver={this._onDragover}>
+        return <li key={["item-", index].join("")} draggable="true"
+                   onDragOver={this._onDragover}
+                   onDragEnd={this._onDragend}>
           {point.title}
           <button data-index={index} onClick={function(e){ deletePoint(+e.target.dataset.index);} }>Удалить</button>
         </li>
-      /*</Throttle>*/});
+    });
 
     return  <ul>{listPoints}</ul>
   }
 
-  _onDragend(e){
+  _onDragend(event){
+    console.log(event.target, event.pageX, event.pageY)
   }
-  _onDragover(event){
-      console.log(event.target, event.pageX, event.pageY)
+
+  _onDragover = (event) => {
+      this._onDragoverThrottle({
+          target: event.target,
+          pageX: event.pageX,
+          pageY: event.pageY,
+      })
+  }
+
+  _onDragoverThrottle(pageCoords){
+    console.log(pageCoords)
   }
 }
