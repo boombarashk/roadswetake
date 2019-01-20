@@ -1,10 +1,11 @@
 {
   "name": "roadswetake",
   "version": "1.0.0",
-  "homepage": "./build/index.html",
+  "homepage": "https://boombarashk.github.io/roadswetake/",
   "dependencies": {
     "@material/react-icon-button": "^0.8.0",
     "@material/react-material-icon": "^0.8.0",
+    "gh-pages": "^2.0.1",
     "lodash.throttle": "^4.1.1",
     "lodash.uniqueid": "^4.0.1",
     "react": "^16.4.0",
@@ -16,7 +17,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build"
   },
   "devDependencies": {
     "jest-cli": "^23.6.0"
