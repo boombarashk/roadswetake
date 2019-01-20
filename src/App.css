@@ -1,0 +1,55 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+
+.App-input {
+  outline: none;
+  margin-right: 8px;
+  padding: 4px;
+  border-radius: 2px;
+}
+.App-addBtn {
+  position: relative;
+  top: 8px;
+}
+
+.App-handles {
+  background-color: #222;
+  width: 30%;
+  padding: 20px;
+  color: white;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.App-map {
+  width: 70%;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+.App-item {
+  list-style: none;
+  position: relative;
+  text-align: left;
+}
+
+.App-flyingItem .mdc-icon-button {
+  visibility: hidden;
+}
+
+.App-listPoints {
+  padding-left: .8em;
+}
+/*
+
+.App-listPoints .mdc-icon-button {
+  height: 32px;
+  width: 32px
+}*/

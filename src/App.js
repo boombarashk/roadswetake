@@ -4,12 +4,11 @@ import uniqueid from 'lodash.uniqueid'
 import YandexMap from './components/yandex-map'
 import ListPoints from './components/list-points'
 import TextField from './components/text-field'
+import IconButton from '@material/react-icon-button'
+import MaterialIcon from '@material/react-material-icon'
+import '@material/react-icon-button/dist/icon-button.css';
+import '@material/react-material-icon/dist/material-icon.css';
 import './App.css';
-
-const handleClick = (event) => {
-  console.log(event, event.get('coords'))
-  console.log(event.originalEvent.map.balloon.open())
-};
 
 
 export default class App extends Component {
@@ -45,7 +44,11 @@ export default class App extends Component {
       <div className="App">
         <section className="App-handles">
           <TextField refField={this.refField}/>
-          <button className="btn" onClick={this.addPoint}>Добавить</button>
+
+          <IconButton  onClick={this.addPoint} title={"Добавить точку маршрута"} className="App-addBtn">
+            <MaterialIcon icon='queue' />
+          </IconButton>
+
           <ListPoints
             setOfPoints={this.state.setOfPoints}
             replacePoints = {this.replacePoints}
@@ -54,7 +57,6 @@ export default class App extends Component {
 
         <section className="App-map">
           <YandexMap
-            handleClick={handleClick}
             onIconClicked={this._onIconClicked}
             setCoordsAfterDrag={this.setCoordsAfterDrag}
             {...this.state}
@@ -96,7 +98,8 @@ export default class App extends Component {
     }
   }
 
-  deletePoint(delIndex){
+  deletePoint(event) {
+    const delIndex = +event.target.closest("li").dataset.index
     this.setState({setOfPoints: this.state.setOfPoints.filter((point, index) => {return delIndex !== index})})
   }
 
