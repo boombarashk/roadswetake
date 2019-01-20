@@ -38,8 +38,9 @@ export default class App extends Component {
 
     return (
       <div className="App">
-        <section className="App-handles">
-          <TextField refField={this.refField}/>
+        <section className="App-handles"
+          onKeyPress={(event) => {if (event.key === 'Enter'){ this.addPoint()}}} >
+          <TextField refField={this.refField} />
 
           <IconButton  onClick={this.addPoint} title={"Добавить точку маршрута"} className="App-addBtn">
             <MaterialIcon icon='queue' />

@@ -1,7 +1,7 @@
 {
   "name": "roadswetake",
-  "version": "0.1.0",
-  "private": true,
+  "version": "1.0.0",
+  "homepage": "./build/index.html",
   "dependencies": {
     "@material/react-icon-button": "^0.8.0",
     "@material/react-material-icon": "^0.8.0",

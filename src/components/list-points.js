@@ -24,7 +24,9 @@ export default class ListPoints extends Component {
                        onDragStart={this._onDragstart}
                        onDragOver={this._onDragover}
                        onDragEnd={this._onDragend}>
-                {point.title}
+                <span className="App-itemTitle">
+                    {point.title}
+                </span>
 
                 <IconButton title={"Удалить"} onClick={deletePoint}>
                     <MaterialIcon icon='delete' />
