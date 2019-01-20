@@ -1,44 +1,48 @@
 import React, { Component } from 'react';
-import throttle from 'lodash.throttle';
-import { THROTTLE_TIME } from "../constants";
+
 
 export default class ListPoints extends Component {
-  constructor(props){
-    super(props);
+    constructor(props){
+        super(props);
+        this.state = {
+            draggableIndex: null,
+        }
+        this._onDrop = this._onDrop.bind(this);
+        this._onDragstart = this._onDragstart.bind(this);
+        this._onDragend = this._onDragend.bind(this);
+        this._onDragover = this._onDragover.bind(this);
+    }
 
-    this._onDragend = this._onDragend.bind(this);
-    this._onDragover = this._onDragover.bind(this);
-    this._onDragoverThrottle = throttle(this._onDragoverThrottle, THROTTLE_TIME);
-  }
+    render(){
+        const { setOfPoints, deletePoint } = this.props;
 
-  render(){
-    const { setOfPoints, deletePoint } = this.props;
+        const listPoints = setOfPoints.map((point, index)=>{
+            return <li key={["item-", index].join("")} data-index={index} draggable
+                       onDragStart={this._onDragstart}
+                       onDragOver={this._onDragover}
+                       onDragEnd={this._onDragend}>
+                {point.title}
+                <button data-index={index} onClick={function(e){ deletePoint(+e.target.dataset.index);} }>Удалить</button>
+            </li>
+        });
 
-    const listPoints = setOfPoints.map((point, index)=>{
-        return <li key={["item-", index].join("")} draggable="true"
-                   onDragOver={this._onDragover}
-                   onDragEnd={this._onDragend}>
-          {point.title}
-          <button data-index={index} onClick={function(e){ deletePoint(+e.target.dataset.index);} }>Удалить</button>
-        </li>
-    });
+        return  <ul onDrop={this._onDrop}>{listPoints}</ul>
+    }
 
-    return  <ul>{listPoints}</ul>
-  }
+    _onDrop(event){
+        this.props.replacePoints(event.target.dataset.index, this.state.draggableIndex)
+    }
 
-  _onDragend(event){
-    console.log(event.target, event.pageX, event.pageY)
-  }
+    _onDragstart(event){
+        //event.target.classList.add(FLYING_CLASSNAME);
+        this.setState({draggableIndex: event.target.dataset.index})
 
-  _onDragover = (event) => {
-      this._onDragoverThrottle({
-          target: event.target,
-          pageX: event.pageX,
-          pageY: event.pageY,
-      })
-  }
+    }
+    _onDragend(event){
+        //event.target.classList.remove(FLYING_CLASSNAME)
+    }
 
-  _onDragoverThrottle(pageCoords){
-    console.log(pageCoords)
-  }
+    _onDragover = (event) => {
+        event.preventDefault();
+    }
 }

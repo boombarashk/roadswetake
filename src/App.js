@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { CENTER_COORDS } from "./constants";
+import uniqueid from 'lodash.uniqueid'
 import YandexMap from './components/yandex-map'
 import ListPoints from './components/list-points'
 import TextField from './components/text-field'
@@ -31,7 +32,11 @@ export default class App extends Component {
     }
     this._onIconClicked = this._onIconClicked.bind(this)
     this.setCoordsAfterDrag = this.setCoordsAfterDrag.bind(this)
+    this.addPoint = this.addPoint.bind(this)
     this.deletePoint = this.deletePoint.bind(this)
+    this.replacePoints = this.replacePoints.bind(this)
+
+    this.refField = React.createRef()
   }
 
   render() {
@@ -39,8 +44,12 @@ export default class App extends Component {
     return (
       <div className="App">
         <section className="App-handles">
-          <TextField/>
-          <ListPoints setOfPoints={this.state.setOfPoints} deletePoint={this.deletePoint}/>
+          <TextField refField={this.refField}/>
+          <button className="btn" onClick={this.addPoint}>Добавить</button>
+          <ListPoints
+            setOfPoints={this.state.setOfPoints}
+            replacePoints = {this.replacePoints}
+            deletePoint={this.deletePoint}/>
         </section>
 
         <section className="App-map">
@@ -71,7 +80,29 @@ export default class App extends Component {
     })})
   }
 
+  addPoint(){
+    const title = this.refField.current.value.trim();
+    if (title.length) {
+      let copyPoints = this.state.setOfPoints.slice(0);
+      copyPoints.push({
+        id: uniqueid(),
+        title: title,
+        coords: CENTER_COORDS,
+      });
+
+      this.refField.current.value = "";
+
+      this.setState({setOfPoints: copyPoints })
+    }
+  }
+
   deletePoint(delIndex){
     this.setState({setOfPoints: this.state.setOfPoints.filter((point, index) => {return delIndex !== index})})
+  }
+
+  replacePoints(targetIndex, currentIndex) {
+      let copyPoints = this.state.setOfPoints.slice(0);
+      copyPoints.splice(targetIndex, 0, copyPoints.splice(currentIndex, 1)[0])
+      this.setState({setOfPoints: copyPoints})
   }
 }
