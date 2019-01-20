@@ -14,7 +14,7 @@ export default class YandexMap extends Component {
 
     return (
         <YMaps query={{
-          apikey: '1576e534-4f10-4132-87f9-1288b93ed78b',
+          apikey: 'API_KEY',
         }}>
           <Map width height="100%"
             defaultState={mapState} >
