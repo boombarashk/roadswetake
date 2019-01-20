@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import IconButton from '@material/react-icon-button'
 import MaterialIcon from '@material/react-material-icon'
-import { FLYING_CLASSNAME } from "../constants";
+import { LISTPOINTS_CLASSNAME, FLYING_CLASSNAME } from "../constants";
 
 export default class ListPoints extends Component {
     constructor(props){
@@ -32,7 +32,7 @@ export default class ListPoints extends Component {
             </li>
         });
 
-        return  <ul onDrop={this._onDrop} className="App-listPoints">{listPoints}</ul>
+        return  <ul onDrop={this._onDrop} className={LISTPOINTS_CLASSNAME}>{listPoints}</ul>
     }
 
     _onDrop(event){

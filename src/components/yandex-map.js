@@ -25,7 +25,7 @@ export default class YandexMap extends Component {
 
                 let polyline = null;
                 if (index < setOfPoints.length - 1 && index !== draggableIndex && index !== draggableIndex - 1) {
-                  // point.id !== draggableId
+
                   polyline = <GeoObject
                     key={[point.id, "-path"].join("")}
                     geometry={{
