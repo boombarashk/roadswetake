@@ -88,7 +88,8 @@ export default class App extends Component {
   }
 
   deletePoint(event) {
-    const delIndex = +event.target.closest("li").dataset.index
+    const delIndex = +event.target.closest("button").dataset.index
+    if (delIndex)
     this.setState({setOfPoints: this.state.setOfPoints.filter((point, index) => {return delIndex !== index})})
   }
 

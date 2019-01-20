@@ -53,17 +53,3 @@ body {
   text-overflow: ellipsis;
   font-size: 0.9em;
 }
-
-.App-item {
-  list-style: none;
-  position: relative;
-  text-align: left;
-}
-
-.App-flyingItem .mdc-icon-button {
-  visibility: hidden;
-}
-
-.App-listPoints {
-  padding-left: .8em;
-}

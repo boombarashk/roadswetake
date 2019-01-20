@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import { LISTPOINTS_CLASSNAME, MAPCONTAINER_CLASSNAME } from "./constants";
+import { POINTS_CLASSNAME, MAPCONTAINER_CLASSNAME } from "./constants";
 
 describe("проверка из коробки", function(){
   it('renders without crashing', () => {
@@ -16,7 +16,7 @@ describe("проверка составляющих", function(){
   ReactDOM.render(<App />, div);
 
   it('список точек маршрута отображается', () => {
-    expect(div.querySelector("." + LISTPOINTS_CLASSNAME).children.length).toBeGreaterThan(0);
+    expect(div.querySelectorAll("." + POINTS_CLASSNAME).length).toBeGreaterThan(0);
   });
 
   it('загрузилась Яндекс.Карта', ()=>{

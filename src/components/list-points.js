@@ -1,56 +1,63 @@
 import React, { Component } from 'react';
 import IconButton from '@material/react-icon-button'
 import MaterialIcon from '@material/react-material-icon'
-import { LISTPOINTS_CLASSNAME, FLYING_CLASSNAME } from "../constants";
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import {POINTS_CLASSNAME} from "../constants";
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+    userSelect: 'none',
+    margin: `0 0 4px 0`,
+    border: isDragging ? '1px dotted' : 'transparent',
+    ...draggableStyle,
+});
 
 export default class ListPoints extends Component {
     constructor(props){
         super(props);
-        this.state = {
-            draggableIndex: null,
-        }
-        this._onDrop = this._onDrop.bind(this);
-        this._onDragstart = this._onDragstart.bind(this);
-        this._onDragend = this._onDragend.bind(this);
-        this._onDragover = this._onDragover.bind(this);
+
+        this._onDragEnd = this._onDragEnd.bind(this);
     }
 
     render(){
         const { setOfPoints, deletePoint } = this.props;
 
-        const listPoints = setOfPoints.map((point, index)=>{
-            return <li key={["item-", index].join("")} data-index={index} draggable
-                       className="App-item"
-                       onDragStart={this._onDragstart}
-                       onDragOver={this._onDragover}
-                       onDragEnd={this._onDragend}>
-                <span className="App-itemTitle">
-                    {point.title}
-                </span>
+        return <DragDropContext onDragEnd={this._onDragEnd}>
+            <Droppable droppableId="droppable">
+                {(provided, snapshot) => (
+                    <div ref={provided.innerRef}>
+                        {setOfPoints.map((item, index) => (
+                            <Draggable key={item.id} draggableId={item.id} index={index} className="App-item">
+                                {(provided, snapshot) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        style={getItemStyle(
+                                            snapshot.isDragging,
+                                            provided.draggableProps.style
+                                        )}
+                                    >
+                                        <span className={POINTS_CLASSNAME}>{item.title}</span>
 
-                <IconButton title={"Удалить"} onClick={deletePoint}>
-                    <MaterialIcon icon='delete' />
-                </IconButton>
-            </li>
-        });
-
-        return  <ul onDrop={this._onDrop} className={LISTPOINTS_CLASSNAME}>{listPoints}</ul>
+                                        <IconButton title={"Удалить"} onClick={deletePoint} data-index={index}>
+                                            <MaterialIcon icon='delete' />
+                                        </IconButton>
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
     }
 
-    _onDrop(event){
-        this.props.replacePoints(event.target.dataset.index, this.state.draggableIndex)
-    }
+    _onDragEnd(result){
+        if (!(result.destination && result.source)) {
+            return;
+        }
 
-    _onDragstart(event){
-        event.target.classList.add(FLYING_CLASSNAME);
-        this.setState({draggableIndex: event.target.dataset.index})
-
-    }
-    _onDragend(event){
-        event.target.classList.remove(FLYING_CLASSNAME)
-    }
-
-    _onDragover = (event) => {
-        event.preventDefault();
+        this.props.replacePoints(result.destination.index, result.source.index)
     }
 }
